@@ -23,6 +23,7 @@ that is intended to set permissions on the USB device interfaces
 that the SC presents when it is plugged in.
 Questionable permissions aside, even if all lines are uncommented bar this one:
 > SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", MODE="0666"
+
 the controller will fail to work - an inspection of dmesg revealed
 that even the *kernel* thinks the device disconnected.
 
@@ -54,6 +55,7 @@ see the example_keymaps directory.
 The variable SC\_KEYMAP\_PATH must be set pointing to this file.
 Then, run main.lua like so:
 > $ ./main.lua "/dev/input/eventX"
+
 where eventX should be replaced with the event node of the steam controller's
 _raw input node_ (not the mouse/keyboard emulation ones it creates).
 Finding this out is a bit manual,
