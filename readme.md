@@ -102,3 +102,20 @@ I have better things to do with my controller than worry about licensing!
 
 
 
+## Things this won't do
+### Enabling/disabling the gyro, accelerometer etc.
+After boot, the steam controller does not send the gyro
+and other such sensor data by default.
+It seems it requires explicit enablement -
+[steamctrl](https://github.com/rodrigorc/steamctrl)
+is a good place to look, as well as `drivers/hid/hid-steam.c`
+in the linux kernel source for the relevant bitmask constants.
+
+This in theory could be done in lua too
+(if there exists a lua library to talk to `/dev/hidraw*`)
+but is really outside the scope of this program.
+That said, in theory sc\_lunar\_mapper could handle the events
+when they are enabled, but will not have functionality to do so itself.
+This is because, depending on the mapping config,
+it may not be desirable to automatically turn it on and running all the time,
+as users may at times inadvertently trigger it even while "resting" with it.
