@@ -18,6 +18,7 @@ return function(loader)
 	local IFakeKeyboard = 
 		loader("UInputFakeKeyboard")(IUInputFactory, IKeymap)
 
+	local IConfig = loader("KeymapEmbeddedConfig")(IKeymap)
 
 	-- "Abs cut-off" is referring to the fact that on it's own,
 	-- the analog data from the touchpad isn't enough to know when to reset events;
