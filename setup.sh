@@ -1,2 +1,2 @@
-eval $(luarocks-5.3 path);
+eval $(luarocks path);
 export SC_KEYMAP_PATH="$PWD/example_keymaps/minetest.lua"
