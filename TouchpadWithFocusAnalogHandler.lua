@@ -38,7 +38,7 @@ end
 
 
 local strongerof = math.min
-return function(IAbsCutOffHandler, IAnalogHandler)
+return function(IAbsCutOffHandler, IAnalogHandler, IConfig)
 	local update = IAbsCutOffHandler.update
 	local lscale = 1.0
 	local rscale = 1.0
@@ -55,7 +55,15 @@ return function(IAbsCutOffHandler, IAnalogHandler)
 		end
 	end
 
+	-- currently the analog inputs used for this are hardcoded above...
+	-- I should probably FIXME this someday.
+	-- in the meantime, allow the values to be passed through,
+	-- even if they were used for an event here.
+	local bypass = IConfig.passthrough_pointer_events
+	--print("bypass", bypass)
+
 	local process = function(timestamp, code, value)
+		local pass = false
 		if code == rt then
 			lscale = trigger_to_scale(value)
 		elseif code == lt then
@@ -67,6 +75,11 @@ return function(IAbsCutOffHandler, IAnalogHandler)
 			y = abs_range(value)
 			maybe_update()
 		else
+			pass = true
+		end
+		--print("pass", pass)
+		if pass or bypass then
+			--print("passthrough!")
 			inner(timestamp, code, value)
 		end
 	end

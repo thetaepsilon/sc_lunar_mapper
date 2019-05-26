@@ -29,7 +29,7 @@ return function(loader)
 	local __analogHandler =
 		loader("MapToDPadAnalogHandler")(IFakeKeyboard, IKeymap)
 	local IAnalogHandler =
-		loader("TouchpadWithFocusAnalogHandler")(IAbsCutOffHandler, __analogHandler)
+		loader("TouchpadWithFocusAnalogHandler")(IAbsCutOffHandler, __analogHandler, IConfig)
 
 	-- chain of responsibility pattern -
 	-- map to keys to handle buttons the touchpad emulation doesn't need.
