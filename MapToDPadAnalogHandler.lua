@@ -35,9 +35,18 @@ end
 
 
 
+local debug_dump = function(dpad)
+	for k, v in pairs(dpad) do
+		print(k, table.unpack(v))
+	end
+end
+
+
+
 return function(IFakeKeyboard, IKeymap)
 	local map = IKeymap.dpad
 	local change_buttons = create_updater(IFakeKeyboard)
+	--debug_dump(map)
 
 	local state_cache = {}
 
@@ -49,6 +58,7 @@ return function(IFakeKeyboard, IKeymap)
 			--print("analog ???", code)
 			return
 		end
+		--print("map to dpad", time, code, value)
 		-- defaults to nil, not pressed before, which is fine
 		local oldstate = state_cache[code]
 
