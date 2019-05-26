@@ -1,2 +1,2 @@
 eval $(luarocks path);
-export SC_KEYMAP_PATH="$PWD/example_keymaps/minetest.lua"
+echo "don't forget to set SC_KEYMAP_PATH; have a look in example_keymaps/";
