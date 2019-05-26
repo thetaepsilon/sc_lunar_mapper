@@ -21,6 +21,7 @@ local mcenter = c.BTN_1
 local mright = c.BTN_2
 local key = c.EV_KEY
 
+local r = 32768
 return function(IUInputFactory)
 	local fakeMouse = IUInputFactory()
 	fakeMouse:useEvent(c.EV_KEY)
@@ -30,8 +31,8 @@ return function(IUInputFactory)
 	fakeMouse:useKey(mcenter)
 
 	-- TODO: make ranges configurable?
-	fakeMouse:useRelAxis(c.REL_X,-200,200)
-	fakeMouse:useRelAxis(c.REL_Y,-200,200)
+	fakeMouse:useRelAxis(c.REL_X,-r,r)
+	fakeMouse:useRelAxis(c.REL_Y,-r,r)
 	fakeMouse:init("uinput steam controller mapper pointer")
 
 	local move = function(mx, my)
