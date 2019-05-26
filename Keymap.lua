@@ -14,12 +14,20 @@ local env = "SC_KEYMAP_PATH"
 local msg = "path to keymap file was not specified, " .. 
 	"please set environment variable " .. env
 
+local required_tables = { "keyboard", "mouse", "dpad", "config" }
+
 return function()
 	local path = os.getenv(env)
 	if not path then
 		error(msg)
 	end
 
-	return dofile(path)(c)
+	local data = dofile(path)(c)
+	for _, k in ipairs(required_tables) do
+		if data[k] == nil then
+			data[k] = {}
+		end
+	end
+	return data
 end
 
