@@ -49,25 +49,28 @@ otherwise something like `eval $(luarocks path)` in your shell should work.
 
 
 
-## Running
-Firstly, you will need a keymap lua file to specify mappings of buttons etc. -
-see the example_keymaps directory.
-The variable SC\_KEYMAP\_PATH must be set pointing to this file.
-Then, run main.lua like so:
-> $ ./main.lua "/dev/input/eventX"
+## Running and usage
+The default entry point main.lua is really just a thin wrapper to load a "handler script",
+then glue it to the specified event node.
+Running it looks something like this:
+$ ./main.lua example_scripts/sc.lua /dev/input/eventX
 
-where eventX should be replaced with the event node of the steam controller's
-_raw input node_ (not the mouse/keyboard emulation ones it creates).
-Finding this out is a bit manual,
-but is beyond the scope of this application to automate;
-generally look out for the highest event$N node
-that appears when the SC is connected (wired or wirelessly).
+Note that for the steam controller that event node should be the controller one,
+and not the (rather poorly imo) emulated keyboard/mouse event nodes created for the controller's "lizard mode".
 
-If you get no errors, try performing some actions on the controller.
-the application generally remains silent unless something goes wrong.
-Permission issues on either /dev/uinput or the SC's evdev node
-may have to be resolved by manually assigning permissions with sudo
-or by using udev rules to grant permissions to e.g. a "controller" user.
+This script must return a function that is passed a loader object;
+this loader object can be called with the names of the various lua components here to load them.
+This function in turn must return an object with a single function (not method)
+process\_event(), which is called for each event read from the input node.
+See main.lua and the above mentioned example script (sc.lua) for details.
+
+To actually translate events into something else like a keyboard/mouse input,
+the uinput module should be used.
+This is a pretty thin wrapper around the evdev library's Uinput module;
+see UInputFactory.lua and the evdev.Uinput documentation for details,
+and UInputFakeKeyboard.lua for what typical setup looks like.
+The latter takes care of things like declaring used keys,
+so usage of this is encoured where possible :).
 
 
 
