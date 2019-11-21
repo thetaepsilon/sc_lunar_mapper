@@ -1,8 +1,8 @@
 
 local ternary_compare = function(value, upper, lower)
-	if (value > upper) then
+	if (value >= upper) then
 		return true
-	elseif (value < lower) then 
+	elseif (value <= lower) then
 		return false
 	else
 		return nil
