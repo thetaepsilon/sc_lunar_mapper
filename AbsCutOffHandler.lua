@@ -10,37 +10,40 @@ return function(IFakePointer)
 	local ox, oy
 	local move = IFakePointer.move_pointer
 
-	-- note, 0-1 ish float coordinates,
-	-- whereas evdev reports integers -
-	-- it is expected the IAnalogHandler will perform appropriate scaling,
-	-- as well as syncing delivery of the X and Y values
-	-- (as they're typically separate events,
-	-- but the SC sends no EV_SYN events for touchpad axes).
-	-- scale should be set to 1.0 if unused,
-	-- it allows easily scaling the pointer deltas at the point of calculation.
-	local update_abs = function(x, y, s)
-		local nz = ((x ~= 0) and (y ~= 0))
 
-		-- just ignore zero samples, they just cause problems.
-		-- also skip if we have no previous coordinates.
+
+	local ox, oy
+	local update_x = function(x, s)
+		local dx
+		local nz = (x ~= 0)
 		if ox and nz then
-			-- ^ it's very rare that zero is actually reported.
-			-- just ignore them as the touch_reset will follow.
-			local dx = (x - ox) * s
-			local dy = (y - oy) * s
-			move(dx, dy)
+			dx = (x - ox) * s
+			move(dx, 0)
 		end
-		
-		ox, oy = x, y
+		--print("# shift X, old/new/delta:", ox, x, dx)
+		ox = x
 	end
+	local update_y = function(y, s)
+		local dy
+		local nz = (y ~= 0)
+		if oy and nz then
+			dy = (y - oy) * s
+			move(0, dy)
+		end
+		--print("# shift Y, old/new/delta:", oy, y, dy)
+		oy = y
+	end
+
 
 	local touch_reset = function()
 		ox = nil
 		oy = nil
+		--print("# liftoff\n\n\n\n\n\n\n\n\n")
 	end
 
 	return {
-		update = update_abs,
+		update_x = update_x,
+		update_y = update_y,
 		reset = touch_reset,
 	}
 end

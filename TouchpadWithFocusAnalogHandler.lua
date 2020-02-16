@@ -39,20 +39,22 @@ end
 
 local strongerof = math.min
 return function(IAbsCutOffHandler, IAnalogHandler, IConfig)
-	local update = IAbsCutOffHandler.update
+	local update_x = IAbsCutOffHandler.update_x
+	local update_y = IAbsCutOffHandler.update_y
 	local lscale = 1.0
 	local rscale = 1.0
 	
 	local inner = IAnalogHandler.process_analog
 
-	-- handle X/Y syncing so they only get sent in pairs.
-	local x, y
-	local maybe_update = function()
-		if x and y then
-			local scale = strongerof(lscale, rscale)
-			update(x, y, scale)
-			x, y = nil, nil
-		end
+	-- this used to handle pairing up the x/y axes,
+	-- but this approach caused many issues with jankiness of motion
+	-- (particularly when only moving mostly along one axis).
+	-- hence why it's called maybe_.
+	local x = 0
+	local y = 0
+	local s = 1.0
+	local update_scale = function()
+		s = strongerof(lscale, rscale)
 	end
 
 	-- currently the analog inputs used for this are hardcoded above...
@@ -66,14 +68,16 @@ return function(IAbsCutOffHandler, IAnalogHandler, IConfig)
 		local pass = false
 		if code == rt then
 			lscale = trigger_to_scale(value)
+			update_scale()
 		elseif code == lt then
 			rscale = trigger_to_scale(value)
+			update_scale()
 		elseif code == touchX then
 			x = abs_range(value)
-			maybe_update()
+			update_x(x, s)
 		elseif code == touchY then
 			y = abs_range(value)
-			maybe_update()
+			update_y(y, s)
 		else
 			pass = true
 		end
