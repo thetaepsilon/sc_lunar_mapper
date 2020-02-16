@@ -17,11 +17,11 @@ return function(c)
 	local mouse = function(src, target)
 		mousekeys[src] = target
 	end
-	--mouse(c.BTN_TL2, c.BTN_0)
-	--mouse(c.BTN_TR2, c.BTN_2)
+	mouse(c.BTN_TL, c.BTN_0)
+	mouse(c.BTN_TR, c.BTN_2)
 
 	local joystick_threshold = 8000
-	local trigger_threshold = 100
+	local trigger_threshold = 50
 
 	local dpad = {
 		-- why tf is Y axis inverted in hardware!?
