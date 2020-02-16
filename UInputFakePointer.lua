@@ -10,6 +10,7 @@ local flush = function(dev)
 end
 
 local floor = math.floor
+local ceil = math.ceil
 local s = floatscale
 local rel_x = c.REL_X
 local rel_y = c.REL_Y
@@ -22,6 +23,12 @@ local mright = c.BTN_2
 local key = c.EV_KEY
 
 local r = 32768
+
+-- yet another thing I wish was already in lua by default.
+local round_towards_zero = function(v)
+	return (v > 0) and floor(v) or ceil(v)
+end
+
 return function(IUInputFactory)
 	local fakeMouse = IUInputFactory()
 	fakeMouse:useEvent(c.EV_KEY)
@@ -37,10 +44,10 @@ return function(IUInputFactory)
 
 	local move = function(mx, my)
 		-- gah, linux, why u no float in kernel
-		local sx = floor(mx * s)
-		local sy = floor(my * s)
-		fakeMouse:write(rel, rel_x, sx)
-		fakeMouse:write(rel, rel_y, sy)
+		local sx = round_towards_zero(mx * s)
+		local sy = round_towards_zero(my * s)
+		if sx ~= 0 then fakeMouse:write(rel, rel_x, sx) end
+		if sy ~= 0 then fakeMouse:write(rel, rel_y, sy) end
 		flush(fakeMouse)
 	end
 
